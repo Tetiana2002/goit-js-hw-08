@@ -7,10 +7,29 @@ let formState = {};
 refs.form.addEventListener("submit", onFormSubmit);
 refs.form.addEventListener("input", throttle(onFormInput, 500));
 
-window.addEventListener("load", onLoad);
+
+function onFormSubmit(evt) {
+    e.preventDefault();
+    e.currentTarget.reset();
+    localStorage.removeItem(STORAGE_KEY);
+    console.log(formState);
+    formState = {};
+}
+function onFormInput(evt) {
+    try {
+   
+        formState[evt.target.name] = evt.target.value.trim();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formState))
+    
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
+
 const onLoad = () => {
     try {
-        const data = localStorage.getItem(LOCALSTORAGE_KEY);
+        const data = localStorage.getItem(STORAGE_KEY);
         if (!data) {
             return
         }
@@ -21,22 +40,6 @@ const onLoad = () => {
     } catch (error) {
         console.log(error.message);
     }
-    function onFormSubmit(e) {
-        e.preventDefault();
-        e.currentTarget.reset();
-        localStorage.removeItem(STORAGE_KEY);
-        console.log(formState);
-        formState = {};
-    }
-    function onFormInput(e) {
-        try {
-       
-            formState[evt.target.name] = evt.target.value.trim();
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(formState))
-        
-        } catch (error) {
-            console.log(error.message);
-        }
     
-    }
 }
+window.addEventListener("load", onLoad);
